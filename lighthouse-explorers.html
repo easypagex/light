@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lighthouse Explorers — A Love Letter to the Light</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0A1628;
+    --deep: #060f1c;
+    --teal: #1B6B8A;
+    --teal-light: #2D8FAD;
+    --gold: #E8A932;
+    --gold-dim: #c4891c;
+    --fog: #F0EDE8;
+    --fog-dim: #d8d3cb;
+    --slate: #8BA3B5;
+    --white: #FAFAF8;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--navy);
+    color: var(--fog);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: rgba(6, 15, 28, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(232, 169, 50, 0.15);
+  }
+  .nav-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gold);
+    text-decoration: none;
+    letter-spacing: 0.03em;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: var(--slate);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-family: 'Source Serif 4', serif;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 30%, #0d2240 0%, var(--deep) 70%);
+    padding: 6rem 2rem 4rem;
+    text-align: center;
+  }
+
+  /* Stars */
+  .stars {
+    position: absolute; inset: 0; pointer-events: none;
+  }
+  .star {
+    position: absolute; background: #fff; border-radius: 50%;
+    animation: twinkle var(--d, 3s) ease-in-out infinite var(--delay, 0s);
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.9; }
+  }
+
+  /* Lighthouse silhouette + beam */
+  .lighthouse-wrap {
+    position: relative;
+    width: 120px; height: 260px;
+    margin: 0 auto 3rem;
+    flex-shrink: 0;
+  }
+  .lighthouse-svg { position: relative; z-index: 2; }
+
+  .beam-origin {
+    position: absolute;
+    top: 52px; left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    z-index: 1;
+  }
+  .beam {
+    position: absolute;
+    top: 0; left: 0;
+    width: 380px; height: 380px;
+    transform-origin: 0 0;
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      rgba(232, 169, 50, 0.18) 8deg,
+      rgba(232, 169, 50, 0.32) 18deg,
+      rgba(232, 169, 50, 0.18) 28deg,
+      transparent 36deg
+    );
+    border-radius: 0 100% 100% 0;
+    animation: sweep 4s linear infinite;
+    mix-blend-mode: screen;
+  }
+  .beam-2 {
+    animation: sweep 4s linear infinite;
+    animation-delay: -2s;
+    transform-origin: 0 0;
+    background: conic-gradient(
+      from 180deg,
+      transparent 0deg,
+      rgba(232, 169, 50, 0.14) 8deg,
+      rgba(232, 169, 50, 0.25) 18deg,
+      rgba(232, 169, 50, 0.14) 28deg,
+      transparent 36deg
+    );
+    border-radius: 0 100% 100% 0;
+    position: absolute;
+    width: 380px; height: 380px;
+    top: 0; left: 0;
+  }
+  @keyframes sweep {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* ocean floor */
+  .ocean-floor {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 120px;
+    background: linear-gradient(to top, #060f1c 30%, transparent);
+    pointer-events: none;
+  }
+  .wave {
+    position: absolute; bottom: 60px; left: -100%;
+    width: 300%; height: 60px;
+    background: radial-gradient(ellipse at 50% 100%, rgba(27, 107, 138, 0.3) 0%, transparent 70%);
+    animation: wave-drift 8s ease-in-out infinite;
+  }
+  .wave-2 { bottom: 40px; animation-delay: -4s; animation-duration: 11s; opacity: 0.5; }
+  @keyframes wave-drift {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(8%); }
+  }
+
+  .hero-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    font-weight: 300;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+    max-width: 700px;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .hero-sub {
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    font-weight: 300;
+    color: var(--slate);
+    max-width: 540px;
+    line-height: 1.75;
+    margin-bottom: 2.5rem;
+  }
+  .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--deep);
+    padding: 0.85rem 2.2rem;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: var(--gold-dim); transform: translateY(-1px); }
+  .btn-ghost {
+    border: 1px solid rgba(232, 169, 50, 0.4);
+    color: var(--gold);
+    padding: 0.85rem 2.2rem;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--gold); background: rgba(232, 169, 50, 0.08); }
+
+  /* ── SECTION COMMONS ── */
+  section { position: relative; }
+
+  .section-dark { background: var(--navy); }
+  .section-deeper { background: var(--deep); }
+  .section-fog {
+    background: var(--fog);
+    color: var(--navy);
+  }
+  .section-fog .section-label { color: var(--teal); }
+  .section-fog .section-title { color: var(--navy); }
+  .section-fog p { color: #3a4a5a; }
+
+  .container { max-width: 1080px; margin: 0 auto; padding: 5rem 2rem; }
+  .container-narrow { max-width: 760px; margin: 0 auto; padding: 5rem 2rem; }
+
+  .section-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+    font-weight: 300;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+  }
+  .lead {
+    font-size: 1.15rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: var(--slate);
+    margin-bottom: 1.5rem;
+  }
+  p { line-height: 1.8; margin-bottom: 1rem; font-weight: 300; }
+
+  /* wave divider */
+  .divider {
+    width: 100%; overflow: hidden;
+    line-height: 0; display: block;
+  }
+  .divider svg { display: block; width: 100%; height: 60px; }
+
+  /* ── HISTORY TIMELINE ── */
+  .timeline { margin-top: 3rem; position: relative; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 24px; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--teal) 10%, var(--teal) 90%, transparent);
+  }
+  .tl-item {
+    display: flex; gap: 2rem;
+    margin-bottom: 3rem;
+    padding-left: 0;
+    opacity: 0; transform: translateX(-20px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .tl-item.visible { opacity: 1; transform: none; }
+  .tl-dot {
+    width: 48px; height: 48px; flex-shrink: 0;
+    background: var(--teal);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--white);
+    position: relative; z-index: 1;
+    border: 2px solid var(--gold);
+  }
+  .tl-content {}
+  .tl-year {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.3rem;
+  }
+  .tl-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .tl-text { color: var(--slate); font-size: 0.95rem; line-height: 1.7; }
+
+  /* ── LIGHTHOUSES GRID ── */
+  .lh-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+  .lh-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(27, 107, 138, 0.25);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.5s, transform 0.5s, border-color 0.3s;
+  }
+  .lh-card.visible { opacity: 1; transform: none; }
+  .lh-card:hover { border-color: var(--gold); transform: translateY(-3px); }
+  .lh-card-top {
+    padding: 1.75rem 1.75rem 0;
+  }
+  .lh-flag {
+    font-size: 1.5rem; margin-bottom: 0.75rem; display: block;
+  }
+  .lh-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.25rem;
+  }
+  .lh-loc {
+    font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1rem;
+  }
+  .lh-desc { color: var(--slate); font-size: 0.9rem; line-height: 1.7; padding: 0 1.75rem 1.75rem; }
+  .lh-pill {
+    display: inline-block;
+    background: rgba(27, 107, 138, 0.2);
+    border: 1px solid rgba(27, 107, 138, 0.4);
+    color: var(--teal-light);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.7rem;
+    border-radius: 20px;
+    margin: 0 1.75rem 1.75rem;
+  }
+
+  /* ── WHY IMPORTANT ── */
+  .importance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+  .imp-item {
+    text-align: center;
+    opacity: 0; transform: translateY(16px);
+    transition: opacity 0.5s var(--delay, 0s), transform 0.5s var(--delay, 0s);
+  }
+  .imp-item.visible { opacity: 1; transform: none; }
+  .imp-icon {
+    font-size: 2.5rem; margin-bottom: 1rem; display: block;
+  }
+  .imp-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.6rem;
+  }
+  .imp-text { color: #3a4a5a; font-size: 0.9rem; line-height: 1.7; }
+
+  /* ── UNKNOWN FACTS ── */
+  .facts-list { margin-top: 3rem; }
+  .fact-item {
+    display: flex; gap: 1.5rem;
+    padding: 1.75rem 0;
+    border-bottom: 1px solid rgba(27, 107, 138, 0.2);
+    opacity: 0; transform: translateX(20px);
+    transition: opacity 0.5s, transform 0.5s;
+  }
+  .fact-item:last-child { border-bottom: none; }
+  .fact-item.visible { opacity: 1; transform: none; }
+  .fact-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: rgba(232, 169, 50, 0.2);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 3rem;
+    text-align: right;
+  }
+  .fact-body {}
+  .fact-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .fact-text { color: var(--slate); font-size: 0.9rem; line-height: 1.75; }
+
+  /* ── ABOUT ANNIE ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+  @media (max-width: 680px) {
+    .about-grid { grid-template-columns: 1fr; }
+  }
+  .about-visual {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .about-circle {
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, var(--teal) 0%, var(--navy) 70%);
+    border: 2px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-circle::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 70% 70%, rgba(232, 169, 50, 0.15), transparent 60%);
+  }
+  .quote-block {
+    border-left: 3px solid var(--gold);
+    padding: 1rem 1.5rem;
+    margin: 2rem 0;
+    background: rgba(232, 169, 50, 0.05);
+  }
+  .quote-block p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--fog-dim);
+    line-height: 1.7;
+  }
+  .quote-block cite { font-size: 0.8rem; color: var(--gold); font-style: normal; letter-spacing: 0.1em; }
+
+  /* ── SOCIAL ── */
+  .social-strip {
+    background: var(--deep);
+    border-top: 1px solid rgba(232, 169, 50, 0.15);
+    border-bottom: 1px solid rgba(232, 169, 50, 0.15);
+    padding: 3.5rem 2rem;
+    text-align: center;
+  }
+  .social-strip h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .social-strip p { color: var(--slate); font-size: 0.95rem; margin-bottom: 2rem; }
+  .social-links {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    justify-content: center;
+  }
+  .social-link {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.8rem 1.5rem;
+    border: 1px solid rgba(139, 163, 181, 0.25);
+    border-radius: 3px;
+    color: var(--fog);
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+    background: rgba(255,255,255,0.02);
+  }
+  .social-link:hover { border-color: var(--gold); color: var(--gold); background: rgba(232, 169, 50, 0.05); }
+  .social-link svg { width: 18px; height: 18px; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--deep);
+    padding: 2rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: rgba(139, 163, 181, 0.5);
+    border-top: 1px solid rgba(27, 107, 138, 0.15);
+  }
+  footer a { color: var(--gold); text-decoration: none; }
+
+  /* ── SCROLL FADE ── */
+  .fade-in {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.7s, transform 0.7s;
+  }
+  .fade-in.visible { opacity: 1; transform: none; }
+
+  @media (max-width: 600px) {
+    nav { padding: 1rem 1.2rem; }
+    .nav-links { display: none; }
+    .hero { padding: 5rem 1.5rem 3rem; }
+    .container, .container-narrow { padding: 3.5rem 1.5rem; }
+    .about-circle { width: 180px; height: 180px; font-size: 3.5rem; }
+    .timeline::before { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, .beam, .star, .wave { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="https://lighthouseexplorers.com" target="_blank" rel="noopener">⚓ Lighthouse Explorers</a>
+  <ul class="nav-links">
+    <li><a href="#history">History</a></li>
+    <li><a href="#lighthouses">Lighthouses</a></li>
+    <li><a href="#importance">Importance</a></li>
+    <li><a href="#secrets">Secrets</a></li>
+    <li><a href="#connect">Connect</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <!-- Stars -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Lighthouse -->
+  <div class="lighthouse-wrap">
+    <div class="beam-origin">
+      <div class="beam"></div>
+      <div class="beam-2"></div>
+    </div>
+    <svg class="lighthouse-svg" viewBox="0 0 120 260" width="120" height="260" xmlns="http://www.w3.org/2000/svg">
+      <!-- Base -->
+      <rect x="30" y="220" width="60" height="30" rx="2" fill="#1B3A5C"/>
+      <rect x="20" y="212" width="80" height="12" rx="2" fill="#234872"/>
+      <!-- Tower -->
+      <polygon points="42,215 78,215 72,80 48,80" fill="#1B3A5C"/>
+      <!-- Stripes -->
+      <polygon points="44,200 76,200 75,185 45,185" fill="#E8A932" opacity="0.7"/>
+      <polygon points="47,160 73,160 72,145 48,145" fill="#E8A932" opacity="0.7"/>
+      <polygon points="49,120 71,120 70,105 50,105" fill="#E8A932" opacity="0.7"/>
+      <!-- Lantern room -->
+      <rect x="44" y="58" width="32" height="26" rx="2" fill="#234872"/>
+      <!-- Lantern glow -->
+      <circle cx="60" cy="71" r="11" fill="#E8A932" opacity="0.9"/>
+      <circle cx="60" cy="71" r="7" fill="#fff" opacity="0.8"/>
+      <!-- Roof -->
+      <polygon points="38,60 82,60 60,40" fill="#1B3A5C"/>
+      <!-- Gallery railing -->
+      <rect x="40" y="82" width="40" height="3" rx="1" fill="#8BA3B5"/>
+      <line x1="44" y1="58" x2="44" y2="85" stroke="#8BA3B5" stroke-width="1.5"/>
+      <line x1="52" y1="58" x2="52" y2="85" stroke="#8BA3B5" stroke-width="1.5"/>
+      <line x1="60" y1="58" x2="60" y2="85" stroke="#8BA3B5" stroke-width="1.5"/>
+      <line x1="68" y1="58" x2="68" y2="85" stroke="#8BA3B5" stroke-width="1.5"/>
+      <line x1="76" y1="58" x2="76" y2="85" stroke="#8BA3B5" stroke-width="1.5"/>
+      <!-- Door -->
+      <rect x="52" y="195" width="16" height="20" rx="2" fill="#0A1628"/>
+      <!-- Windows -->
+      <rect x="53" y="170" width="14" height="10" rx="1" fill="rgba(232,169,50,0.4)"/>
+      <rect x="54" y="132" width="12" height="9" rx="1" fill="rgba(232,169,50,0.3)"/>
+    </svg>
+  </div>
+
+  <p class="hero-label">A community for lighthouse lovers</p>
+  <h1 class="hero-title">Where Every <em>Light</em> Tells a Story</h1>
+  <p class="hero-sub">Founded by Annie Spencer, Lighthouse Explorers uncovers the history, legends, and lesser-known stories behind these extraordinary coastal landmarks — and the keepers who tended them.</p>
+
+  <div class="hero-ctas">
+    <a href="https://lighthouseexplorers.com" target="_blank" rel="noopener" class="btn-primary">Visit the Site →</a>
+    <a href="#history" class="btn-ghost">Explore the History</a>
+  </div>
+
+  <div class="ocean-floor">
+    <div class="wave"></div>
+    <div class="wave wave-2"></div>
+  </div>
+</section>
+
+<!-- WAVE DIVIDER -->
+<svg class="divider" viewBox="0 0 1440 60" preserveAspectRatio="none" style="background:var(--navy);display:block;">
+  <path d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z" fill="#060f1c"/>
+</svg>
+
+<!-- HISTORY -->
+<section id="history" class="section-deeper">
+  <div class="container">
+    <p class="section-label fade-in">Maritime Heritage</p>
+    <h2 class="section-title fade-in">A History Written in Light</h2>
+    <p class="lead fade-in">For millennia, lighthouse fires have guided sailors through treacherous waters. From an ancient wonder to the automated towers of today, the lighthouse story is one of engineering, devotion, and the indomitable human will to say: <em>here, you are safe.</em></p>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot">~280<br>BC</div>
+        <div class="tl-content">
+          <p class="tl-year">c. 280 BC</p>
+          <p class="tl-title">The Pharos of Alexandria</p>
+          <p class="tl-text">The world's first great lighthouse rose on the island of Pharos, Egypt, standing between 100–130 metres tall. One of the Seven Wonders of the Ancient World, its fire could be seen 50 kilometres out to sea. It gave every subsequent lighthouse its name — <em>pharos</em> — in many languages.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">Roman</div>
+        <div class="tl-content">
+          <p class="tl-year">1st–3rd Century AD</p>
+          <p class="tl-title">The Roman Empire Spreads the Light</p>
+          <p class="tl-text">Rome built lighthouses across its empire from Britain to the Black Sea. The Torre de Hércules in Galicia, Spain, constructed around 2 AD, still stands and operates today — the oldest working lighthouse in the world, a UNESCO World Heritage Site since 2009.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">1700s</div>
+        <div class="tl-content">
+          <p class="tl-year">18th Century</p>
+          <p class="tl-title">The Age of Engineering Lighthouses</p>
+          <p class="tl-text">The first Eddystone Lighthouse was built on a dangerous Plymouth reef in 1698. Destroyed by storms, it was rebuilt multiple times — the 1759 version by John Smeaton pioneered interlocking granite construction that revolutionised civil engineering. Lighthouse building became a matter of national pride.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">1822</div>
+        <div class="tl-content">
+          <p class="tl-year">1822</p>
+          <p class="tl-title">Augustin Fresnel's Revolutionary Lens</p>
+          <p class="tl-text">French physicist Augustin-Jean Fresnel invented the stepped lens that bears his name. By using a series of concentric prismatic rings, the Fresnel lens concentrated light into a powerful beam visible for miles — using a fraction of the glass a conventional lens would require. It transformed maritime safety overnight.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">1900s</div>
+        <div class="tl-content">
+          <p class="tl-year">20th Century</p>
+          <p class="tl-title">The Keeper's Era Ends</p>
+          <p class="tl-text">As electricity and then radio navigation arrived, lighthouse keepers became increasingly redundant. The United Kingdom's last staffed lighthouse, North Foreland in Kent, was automated in 1998. Across the world, thousands of keepers' cottages fell silent — ending one of history's most solitary and essential professions.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">Today</div>
+        <div class="tl-content">
+          <p class="tl-year">21st Century</p>
+          <p class="tl-title">Preservation, Heritage &amp; the Lighthouse Renaissance</p>
+          <p class="tl-text">With GPS now guiding most vessels, many lighthouses have been decommissioned — but rarely forgotten. Communities, trusts, and passionate advocates like Annie Spencer and Lighthouse Explorers work to preserve these structures as living monuments to maritime heritage. Some have become hotels, museums, and beloved pilgrimage sites.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAVE DIVIDER -->
+<svg class="divider" viewBox="0 0 1440 60" preserveAspectRatio="none" style="background:var(--deep);display:block;">
+  <path d="M0,0 C360,60 1080,0 1440,40 L1440,60 L0,60 Z" fill="var(--navy)"/>
+</svg>
+
+<!-- MOST IMPORTANT LIGHTHOUSES -->
+<section id="lighthouses" class="section-dark">
+  <div class="container">
+    <p class="section-label fade-in">Essential Landmarks</p>
+    <h2 class="section-title fade-in">The World's Most Significant Lighthouses</h2>
+    <p class="lead fade-in">These towers are not merely navigational aids — they are monuments to human determination, engineering genius, and the age-old bond between civilisation and the sea.</p>
+
+    <div class="lh-grid">
+      <div class="lh-card">
+        <div class="lh-card-top">
+          <span class="lh-flag">🇬🇧</span>
+          <p class="lh-name">Eddystone Lighthouse</p>
+          <p class="lh-loc">Plymouth, England</p>
+        </div>
+        <p class="lh-desc">Built on one of the most dangerous reefs in the English Channel, Eddystone has been rebuilt four times. John Smeaton's 1759 granite tower introduced construction techniques still used today. The current tower, completed in 1882, is the spiritual home of the Lighthouse Explorers community — the site of their very first group trip.</p>
+        <span class="lh-pill">Est. 1698</span>
+      </div>
+      <div class="lh-card">
+        <div class="lh-card-top">
+          <span class="lh-flag">🇪🇸</span>
+          <p class="lh-name">Torre de Hércules</p>
+          <p class="lh-loc">A Coruña, Spain</p>
+        </div>
+        <p class="lh-desc">The world's oldest working lighthouse, built by the Romans in the 2nd century AD and still guiding ships today. Declared a UNESCO World Heritage Site in 2009, it stands 55 metres above sea level. According to legend, Hercules himself buried the head of the giant Geryon at its base.</p>
+        <span class="lh-pill">c. 2nd Century AD</span>
+      </div>
+      <div class="lh-card">
+        <div class="lh-card-top">
+          <span class="lh-flag">🇺🇸</span>
+          <p class="lh-name">Cape Hatteras Lighthouse</p>
+          <p class="lh-loc">North Carolina, USA</p>
+        </div>
+        <p class="lh-desc">At 198 feet, the tallest brick lighthouse in the United States, guarding the treacherous "Graveyard of the Atlantic." Its dramatic black-and-white spiral stripe makes it one of the world's most recognisable beacons. In 1999, the entire structure was moved 2,900 feet inland to save it from coastal erosion.</p>
+        <span class="lh-pill">Est. 1870</span>
+      </div>
+      <div class="lh-card">
+        <div class="lh-card-top">
+          <span class="lh-flag">🇮🇪</span>
+          <p class="lh-name">Fastnet Rock</p>
+          <p class="lh-loc">County Cork, Ireland</p>
+        </div>
+        <p class="lh-desc">Rising from a bare rock 4.5km off the Irish coast, Fastnet was the last sight of Ireland for millions of emigrants sailing to America — earning it the nickname "Ireland's Teardrop." The granite tower, completed in 1904, is considered one of the great engineering achievements of the Victorian era.</p>
+        <span class="lh-pill">Est. 1854 (rebuilt 1904)</span>
+      </div>
+      <div class="lh-card">
+        <div class="lh-card-top">
+          <span class="lh-flag">🇫🇷</span>
+          <p class="lh-name">La Jument</p>
+          <p class="lh-loc">Brittany, France</p>
+        </div>
+        <p class="lh-desc">Made globally famous by Jean Guichard's 1989 photograph of keeper Théodore Malgorn opening its door into an enormous breaking wave, La Jument stands on a submerged reef off Brittany's Finistère coast. The photograph encapsulates the raw drama and solitude of lighthouse life better than any words could.</p>
+        <span class="lh-pill">Est. 1904</span>
+      </div>
+      <div class="lh-card">
+        <div class="lh-card-top">
+          <span class="lh-flag">🇳🇴</span>
+          <p class="lh-name">Lindesnes Lighthouse</p>
+          <p class="lh-loc">Vest-Agder, Norway</p>
+        </div>
+        <p class="lh-desc">Norway's oldest lighthouse and the country's southernmost point. First lit in 1655, it marks the boundary between the Skagerrak and the North Sea. The dramatic headland setting — battered by some of Norway's fiercest weather — makes Lindesnes one of Scandinavia's most visited maritime landmarks.</p>
+        <span class="lh-pill">Est. 1655</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAVE DIVIDER -->
+<svg class="divider" viewBox="0 0 1440 60" preserveAspectRatio="none" style="background:var(--navy);display:block;">
+  <path d="M0,40 C480,0 960,60 1440,20 L1440,60 L0,60 Z" fill="var(--fog)"/>
+</svg>
+
+<!-- WHY IMPORTANT -->
+<section id="importance" class="section-fog">
+  <div class="container">
+    <p class="section-label fade-in">Why It Matters</p>
+    <h2 class="section-title fade-in" style="color:var(--navy);">More Than a Warning Light</h2>
+    <p class="lead fade-in" style="color:#3a4a5a;">Lighthouses shaped the modern world. Their influence extends far beyond the ships they guided — into law, science, architecture, and the human spirit.</p>
+
+    <div class="importance-grid">
+      <div class="imp-item" style="--delay:0s">
+        <span class="imp-icon">⚓</span>
+        <p class="imp-title">Maritime Safety</p>
+        <p class="imp-text">Lighthouses have prevented countless shipwrecks along rocky coasts and treacherous shallows. Before electronic navigation, a lighthouse was often the difference between a crew reaching home and disappearing beneath the waves.</p>
+      </div>
+      <div class="imp-item" style="--delay:0.1s">
+        <span class="imp-icon">🌍</span>
+        <p class="imp-title">Global Trade</p>
+        <p class="imp-text">By making coastal waters navigable at night and in poor weather, lighthouses enabled the expansion of global maritime trade. Many of history's most prosperous port cities owe a debt to the lights that guided merchant vessels safely into harbour.</p>
+      </div>
+      <div class="imp-item" style="--delay:0.2s">
+        <span class="imp-icon">🔬</span>
+        <p class="imp-title">Engineering &amp; Science</p>
+        <p class="imp-text">Lighthouse construction drove innovations in masonry, hydraulic cement, and optics. Fresnel's lens transformed not just lighthouse technology but influenced camera optics, cinema projectors, and even modern Fresnel solar concentrators.</p>
+      </div>
+      <div class="imp-item" style="--delay:0.3s">
+        <span class="imp-icon">📖</span>
+        <p class="imp-title">Cultural Heritage</p>
+        <p class="imp-text">Lighthouses appear across literature, painting, and film — from Virginia Woolf's <em>To the Lighthouse</em> to countless folk songs about those lost at sea. They embody themes of guidance, isolation, hope, and the tension between civilization and wild nature.</p>
+      </div>
+      <div class="imp-item" style="--delay:0.4s">
+        <span class="imp-icon">🧭</span>
+        <p class="imp-title">Navigation Standards</p>
+        <p class="imp-text">The systems developed to manage lighthouses — their distinct flash patterns, colours, and timing — gave rise to international maritime navigation standards that still govern global shipping today.</p>
+      </div>
+      <div class="imp-item" style="--delay:0.5s">
+        <span class="imp-icon">🏛️</span>
+        <p class="imp-title">Architectural Legacy</p>
+        <p class="imp-text">From cast-iron skeleton towers to soaring granite columns, lighthouses represent the full range of human architectural ingenuity. Each was designed to withstand the most extreme conditions on Earth — and many are still standing centuries later.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAVE DIVIDER -->
+<svg class="divider" viewBox="0 0 1440 60" preserveAspectRatio="none" style="background:var(--fog);display:block;">
+  <path d="M0,20 C360,60 1080,0 1440,40 L1440,60 L0,60 Z" fill="var(--deep)"/>
+</svg>
+
+<!-- UNKNOWN FACTS -->
+<section id="secrets" class="section-deeper">
+  <div class="container-narrow">
+    <p class="section-label fade-in">The Hidden Side</p>
+    <h2 class="section-title fade-in">Things You Probably Didn't Know</h2>
+    <p class="lead fade-in">The popular image of a solitary keeper in a striped tower barely scratches the surface of the lighthouse world. Here are some of the stranger, more surprising truths.</p>
+
+    <div class="facts-list">
+      <div class="fact-item">
+        <div class="fact-num">01</div>
+        <div class="fact-body">
+          <p class="fact-title">Lighthouse keepers were often women</p>
+          <p class="fact-text">The image of the weatherbeaten male keeper obscures a more complex reality. In 19th-century America alone, more than 150 women served as lighthouse keepers — often taking over after a husband's death and being permitted to stay on. Ida Lewis of Lime Rock Light in Rhode Island is credited with 18 rescues and was celebrated as a national hero in her lifetime.</p>
+        </div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-num">02</div>
+        <div class="fact-body">
+          <p class="fact-title">Some lighthouses were built to mislead — on purpose</p>
+          <p class="fact-text">Before lighthouses were widespread, "wreckers" on some coastlines would light false fires to lure ships onto rocks, then plunder the cargo. The practice was common enough in Cornwall and the Caribbean that new legislation specifically criminalised it. Some historians believe entire communities depended on the income from carefully engineered wrecks.</p>
+        </div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-num">03</div>
+        <div class="fact-body">
+          <p class="fact-title">The Flannan Isles mystery remains unsolved</p>
+          <p class="fact-text">In December 1900, a relief vessel arrived at Scotland's Flannan Isles lighthouse to find all three keepers had vanished without a trace. The table was set for a meal. One keeper's oilskins remained behind. No bodies were ever found. Despite numerous theories — a freak wave, a fight, a mental breakdown — the disappearance of James Ducat, Thomas Marshall, and Donald MacArthur is one of the great unsolved mysteries of the sea.</p>
+        </div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-num">04</div>
+        <div class="fact-body">
+          <p class="fact-title">Each lighthouse has its own unique "signature"</p>
+          <p class="fact-text">To help mariners identify exactly which lighthouse they're looking at in the dark, each has a distinct pattern of flashes, occultations (periods of darkness), and colours called its "characteristic." These are documented in Admiralty charts worldwide. A navigator who knows the pattern can pinpoint their position with remarkable precision — with no electronics required.</p>
+        </div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-num">05</div>
+        <div class="fact-body">
+          <p class="fact-title">Lighthouses once played a role in timekeeping</p>
+          <p class="fact-text">Before radio time signals, many port lighthouses featured "time balls" — large spheres mounted on a mast that would drop at precisely 1 PM, allowing ship captains in harbour to set their chronometers accurately. Without precise time, calculating longitude at sea was impossible. The Edinburgh Time Ball on the Calton Hill, first used in 1852, still drops at 1 PM daily.</p>
+        </div>
+      </div>
+      <div class="fact-item">
+        <div class="fact-num">06</div>
+        <div class="fact-body">
+          <p class="fact-title">Some keepers went mad — and some thrived</p>
+          <p class="fact-text">Life in isolated offshore lighthouses was psychologically extreme. Historical records document keepers who suffered breakdowns, became obsessively religious, or refused to leave when relieved. Yet others flourished: they wrote poetry, made scientific observations, painted, or raised large families. The lighthouse produced both some of the most remarkable personal chronicles and the darkest accounts in British maritime history.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT ANNIE -->
+<section class="section-dark">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-visual fade-in">
+        <div class="about-circle">🏮</div>
+      </div>
+      <div class="fade-in">
+        <p class="section-label">The Person Behind the Light</p>
+        <h2 class="section-title">About Annie Spencer</h2>
+        <p style="color:var(--slate); line-height:1.8; margin-bottom:1rem;">Lighthouse Explorers began as a small passion project — just Annie and a deep love for lighthouses. Over the last few years it has grown into a community of curious, kind, and wonderfully lighthouse-obsessed people.</p>
+        <div class="quote-block">
+          <p>"Everything we do is rooted in sharing maritime heritage in ways that feel accessible, engaging, and (hopefully) a little bit magical."</p>
+          <cite>— Annie Spencer, Lighthouse Explorers</cite>
+        </div>
+        <p style="color:var(--slate); line-height:1.8;">From podcasts and social media to blog articles and in-person lighthouse trips, Annie and the Lighthouse Explorers team uncover the history, legends, and lesser-known stories behind these incredible coastal landmarks — including the people who built, tended, and lived alongside them.</p>
+        <br>
+        <a href="https://lighthouseexplorers.com/meet-the-team/" target="_blank" rel="noopener" class="btn-ghost">Meet the Team →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL / CONNECT -->
+<section id="connect" class="social-strip">
+  <h2>Find Lighthouse Explorers Everywhere</h2>
+  <p>Stories, trips, and lighthouse love across every platform.</p>
+  <div class="social-links">
+    <!-- Website -->
+    <a href="https://lighthouseexplorers.com" target="_blank" rel="noopener" class="social-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      Website
+    </a>
+    <!-- YouTube -->
+    <a href="https://www.youtube.com/channel/UCy7upb1thvgEiBCLf98yusA" target="_blank" rel="noopener" class="social-link">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2s-.3-1.9-1.1-2.7c-1.1-1.1-2.3-1.1-2.8-1.2C16.8 2 12 2 12 2s-4.8 0-7.6.3c-.6.1-1.8.1-2.8 1.2C.8 4.3.5 6.2.5 6.2S.2 8.4.2 10.6v2.1c0 2.2.3 4.4.3 4.4s.3 1.9 1.1 2.7c1.1 1.1 2.5 1.1 3.1 1.2C6.7 21.2 12 21.2 12 21.2s4.8 0 7.6-.3c.6-.1 1.8-.1 2.8-1.2.8-.8 1.1-2.7 1.1-2.7s.3-2.2.3-4.4v-2.1c0-2.2-.3-4.4-.3-4.4zM9.7 15.5V8.5l7.6 3.5-7.6 3.5z"/></svg>
+      YouTube
+    </a>
+    <!-- Spotify -->
+    <a href="https://open.spotify.com/show/75eyvDVw6DeTYAjnLbYEzc" target="_blank" rel="noopener" class="social-link">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+      Spotify Podcast
+    </a>
+    <!-- TikTok -->
+    <a href="https://www.tiktok.com/@lighthouseexplorers" target="_blank" rel="noopener" class="social-link">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.14 8.14 0 0 0 4.77 1.52V6.76a4.85 4.85 0 0 1-1-.07z"/></svg>
+      TikTok
+    </a>
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/annie.spencer.98" target="_blank" rel="noopener" class="social-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      Instagram
+    </a>
+    <!-- Apple Podcasts -->
+    <a href="https://podcasts.apple.com/gb/podcast/lighthouse-explorers/id1699781289" target="_blank" rel="noopener" class="social-link">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12c0 5.1 3.2 9.5 7.8 11.2-.1-.8-.1-2.1.1-3 .3-1.1 1.9-8.2 1.9-8.2s-.5-.9-.5-2.3c0-2.2 1.3-3.8 2.9-3.8 1.4 0 2 1 2 2.2 0 1.4-.9 3.4-1.3 5.3-.4 1.6.8 2.9 2.3 2.9 2.7 0 4.8-2.9 4.8-7 0-3.7-2.6-6.2-6.4-6.2-4.3 0-6.9 3.2-6.9 6.6 0 1.3.5 2.7 1.1 3.4.1.1.1.3.1.4-.1.5-.4 1.6-.4 1.8-.1.3-.2.4-.5.2-1.9-.9-3.1-3.7-3.1-5.9 0-4.8 3.5-9.2 10-9.2 5.3 0 9.4 3.7 9.4 8.7 0 5.2-3.2 9.3-7.8 9.3-1.5 0-2.9-.8-3.4-1.7l-.9 3.5c-.3 1.2-1.2 2.7-1.8 3.6.7.2 1.3.3 2 .3 6.6 0 12-5.4 12-12C24 5.4 18.6 0 12 0z"/></svg>
+      Apple Podcasts
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p style="margin-bottom:0.5rem;">This fan page was created in tribute to <a href="https://lighthouseexplorers.com" target="_blank" rel="noopener">Lighthouse Explorers</a> — a community founded by <a href="https://www.instagram.com/annie.spencer.98" target="_blank" rel="noopener">Annie Spencer</a>.</p>
+  <p>All credit for the project, its community, and its extraordinary content belongs to the Lighthouse Explorers team.</p>
+</footer>
+
+<script>
+  // Generate stars
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 90; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      top:${Math.random()*80}%;
+      --d:${(Math.random()*3+2).toFixed(1)}s;
+      --delay:-${(Math.random()*5).toFixed(1)}s;
+    `;
+    starsEl.appendChild(s);
+  }
+
+  // Scroll-reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-in, .tl-item, .lh-card, .imp-item, .fact-item').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
